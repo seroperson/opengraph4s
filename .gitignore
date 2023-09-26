@@ -1,0 +1,6 @@
+# mill output
+out/
+.bsp/
+
+# idea stuff
+.idea/
