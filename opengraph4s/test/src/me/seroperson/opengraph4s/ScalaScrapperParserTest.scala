@@ -9,7 +9,10 @@ import org.scalatest.matchers.should.Matchers
 
 import java.nio.charset.StandardCharsets
 
-class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
+class ScalaScrapperParserTest
+    extends AsyncFreeSpec
+    with AsyncIOSpec
+    with Matchers {
 
   val twitchTv: String =
     """
@@ -137,7 +140,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   val parser: Parser[ParseData, IO] = ScalaScrapperParser[IO]()
 
   "parse title from meta with property attr" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           titleProperty.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -149,7 +153,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "parse title from meta with name attr" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           titleName.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -161,7 +166,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "prefer title from property rather than from name attr" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           titleInPropertyAndName.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -173,7 +179,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "prefer title from og:title rather than from title" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           titleInOgAndProperty.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -185,7 +192,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "parse title from tag" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           titleTag.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -197,7 +205,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "parse url from og:url" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           urlOgProperty.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -209,7 +218,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "parse image from og:image" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           imageOgProperty.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -221,7 +231,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "parse type from og:type" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           typeOgProperty.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -233,7 +244,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "parse site_name from og:site_name" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           siteNameOgProperty.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -245,7 +257,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "parse description from description" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           descriptionProperty.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -257,7 +270,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "prefer description from og:description rather than from description" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           descriptionInOgAndProperty.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -269,7 +283,8 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
   }
 
   "correctly parse real-life case" in {
-    parser.parse(
+    parser
+      .parse(
         ParseData(
           twitchTv.getBytes(StandardCharsets.UTF_8),
           StandardCharsets.UTF_8
@@ -287,10 +302,14 @@ class ScalaScrapperParserTest extends AsyncFreeSpec with AsyncIOSpec with Matche
         ) shouldBe (
           Some("Twitch"),
           Some("https://www.twitch.tv"),
-          Some("https://static-cdn.jtvnw.net/ttv-static-metadata/twitch_logo3.jpg"),
+          Some(
+            "https://static-cdn.jtvnw.net/ttv-static-metadata/twitch_logo3.jpg"
+          ),
           Some("website"),
           Some("Twitch"),
-          Some("Twitch is an interactive livestreaming service for content spanning gaming, entertainment, sports, music, and more. There’s something for everyone on Twitch."),
+          Some(
+            "Twitch is an interactive livestreaming service for content spanning gaming, entertainment, sports, music, and more. There’s something for everyone on Twitch."
+          ),
           Some("Twitch")
         )
       }

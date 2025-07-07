@@ -4,3 +4,6 @@ out/
 
 # idea stuff
 .idea/
+
+# metals
+.metals/

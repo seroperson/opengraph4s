@@ -68,8 +68,7 @@ class SttpClientTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
         .pure(
           new WebSocketStreamBackendStub[IO, Fs2Streams[IO]](
             MonadError[IO],
-            {
-              case _ /*@ Request(
+            { case _ /*@ Request(
                 GET,
                 Uri(
                   scheme,
@@ -84,15 +83,15 @@ class SttpClientTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
                 options,
                 tags
               )*/ =>
-                IO.pure(
-                  Response.ok(
-                    Right(
-                      Stream[IO, Byte](
-                        twitchTv.getBytes(StandardCharsets.UTF_8):_*
-                      )
+              IO.pure(
+                Response.ok(
+                  Right(
+                    Stream[IO, Byte](
+                      twitchTv.getBytes(StandardCharsets.UTF_8): _*
                     )
                   )
                 )
+              )
             },
             None
           ): StreamBackend[IO, Fs2Streams[IO]]
@@ -103,8 +102,7 @@ class SttpClientTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
   "correctly parse real-life case" in {
     client
       .use {
-        _
-          .request("https://twitch.tv/")
+        _.request("https://twitch.tv/")
           .asserting { response =>
             (
               response.title,
@@ -114,13 +112,17 @@ class SttpClientTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
               response.siteName,
               response.description,
               response.metaProperties.get("al:android:app_name")
-            ) shouldBe(
+            ) shouldBe (
               Some("Twitch"),
               Some("https://www.twitch.tv"),
-              Some("https://static-cdn.jtvnw.net/ttv-static-metadata/twitch_logo3.jpg"),
+              Some(
+                "https://static-cdn.jtvnw.net/ttv-static-metadata/twitch_logo3.jpg"
+              ),
               Some("website"),
               Some("Twitch"),
-              Some("Twitch is an interactive livestreaming service for content spanning gaming, entertainment, sports, music, and more. There’s something for everyone on Twitch."),
+              Some(
+                "Twitch is an interactive livestreaming service for content spanning gaming, entertainment, sports, music, and more. There’s something for everyone on Twitch."
+              ),
               Some("Twitch")
             )
           }

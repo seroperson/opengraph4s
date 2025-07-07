@@ -5,7 +5,8 @@ import mill.scalalib.publish._
 object Version {
   val scala212 = "2.12.18"
   val scala213 = "2.13.12"
-  val scalaCross = Seq(scala212, scala213)
+  val scala336 = "3.3.6"
+  val scalaCross = Seq(scala212, scala213, scala336)
 
   val cats = "2.10.0"
   val catsEffect = "3.5.1"
@@ -26,14 +27,17 @@ object Library {
   val catsCore = ivy"org.typelevel::cats-core::${Version.cats}"
   val catsEffectStd = ivy"org.typelevel::cats-effect-std::${Version.catsEffect}"
 
-  val sttpClient = ivy"com.softwaremill.sttp.client4::core::${Version.sttpClient}"
-  val sttpClientFs2 = ivy"com.softwaremill.sttp.client4::fs2::${Version.sttpClient}"
+  val sttpClient =
+    ivy"com.softwaremill.sttp.client4::core::${Version.sttpClient}"
+  val sttpClientFs2 =
+    ivy"com.softwaremill.sttp.client4::fs2::${Version.sttpClient}"
 
   val jsoup = ivy"net.ruippeixotog::scala-scraper::${Version.jsoup}"
 
   // tests
   val scalaTest = ivy"org.scalatest::scalatest::${Version.scalaTest}"
-  val scalaTestEffects = ivy"org.typelevel::cats-effect-testing-scalatest::${Version.scalaTestEffects}"
+  val scalaTestEffects =
+    ivy"org.typelevel::cats-effect-testing-scalatest::${Version.scalaTestEffects}"
 
   // examples
   val pprint = ivy"com.lihaoyi::pprint:${Version.pprint}"
@@ -68,7 +72,8 @@ trait OpenGraph4sModule extends BaseModule with PublishModule {
     "0.1.0"
 
   override def pomSettings = PomSettings(
-    description = "Deadly-simple library for fetching OpenGraph tags from a given webpage.",
+    description =
+      "Deadly-simple library for fetching OpenGraph tags from a given webpage.",
     organization = "me.seroperson",
     url = "https://github.com/seroperson/opengraph4s",
     licenses = Seq(License.Common.MIT),
@@ -131,5 +136,3 @@ object example extends Module {
   }
 
 }
-
-

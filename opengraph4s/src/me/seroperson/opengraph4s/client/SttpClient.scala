@@ -11,31 +11,33 @@ import sttp.model.Uri
 
 import java.nio.charset.StandardCharsets
 
-/**
- * Client implementation using `sttp` library.
- *
- * @param parser parser which will be used to parse a webpage.
- * @param backend `sttp` backend resource instance.
- * @param bufferSize a webpage will be fetched using buffered stream with the
- *                   given size.
- * @param fetchFullPage whether to fetch or not a full page. If `false`
- *                      (default), then a webpage will be fetched until
- *                      `</head>` bytes sequence appeared. Otherwise, the full
- *                      page will be fetched.
- *
- * @note Sometimes not-fully-fetched webpage can lead to errors if js-enabled
- *       [[parser]] is used. So, be sure to construct a client which fits your
- *       needs.
- * */
-class SttpClient[F[_] : Async : MonadThrow](
-  parser: Parser[ParseData, F],
-  backend: StreamBackend[F, Fs2Streams[F]],
-  bufferSize: Int = 512,
-  fetchFullPage: Boolean = false
+/** Client implementation using `sttp` library.
+  *
+  * @param parser
+  *   parser which will be used to parse a webpage.
+  * @param backend
+  *   `sttp` backend resource instance.
+  * @param bufferSize
+  *   a webpage will be fetched using buffered stream with the given size.
+  * @param fetchFullPage
+  *   whether to fetch or not a full page. If `false` (default), then a webpage
+  *   will be fetched until `</head>` bytes sequence appeared. Otherwise, the
+  *   full page will be fetched.
+  *
+  * @note
+  *   Sometimes not-fully-fetched webpage can lead to errors if js-enabled
+  *   [[parser]] is used. So, be sure to construct a client which fits your
+  *   needs.
+  */
+class SttpClient[F[_]: Async: MonadThrow](
+    parser: Parser[ParseData, F],
+    backend: StreamBackend[F, Fs2Streams[F]],
+    bufferSize: Int = 512,
+    fetchFullPage: Boolean = false
 ) extends Client[F] {
 
   override def request(
-    url: String
+      url: String
   ): F[OpenGraphParsed] = {
     for {
       uri <- MonadThrow[F]
@@ -54,8 +56,7 @@ class SttpClient[F[_] : Async : MonadThrow](
 
       stream <- MonadThrow[F]
         .fromEither(
-          response
-            .body
+          response.body
             .leftMap(ex => new Throwable(ex))
         )
 
@@ -64,7 +65,9 @@ class SttpClient[F[_] : Async : MonadThrow](
         .chunkMin(bufferSize)
         .takeThrough { chunk =>
           // todo: some other way to find </head>?
-          fetchFullPage || !chunk.toList.containsSlice(SttpClient.HeadEnclosingAsBytes)
+          fetchFullPage || !chunk.toList.containsSlice(
+            SttpClient.HeadEnclosingAsBytes
+          )
         }
         .foldMonoid
         .map(_.toArray)
@@ -84,11 +87,11 @@ object SttpClient {
   // todo: respect non-utf-8 charset
   private val HeadEnclosingAsBytes = "</head>".getBytes(StandardCharsets.UTF_8)
 
-  def apply[F[_] : Async : MonadThrow](
-    parser: Parser[ParseData, F],
-    backend: Resource[F, StreamBackend[F, Fs2Streams[F]]],
-    bufferSize: Int = 512,
-    fetchFullPage: Boolean = false
+  def apply[F[_]: Async: MonadThrow](
+      parser: Parser[ParseData, F],
+      backend: Resource[F, StreamBackend[F, Fs2Streams[F]]],
+      bufferSize: Int = 512,
+      fetchFullPage: Boolean = false
   ): Resource[F, SttpClient[F]] = {
     for {
       b <- backend
