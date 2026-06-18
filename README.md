@@ -7,13 +7,13 @@ Deadly-simple library for fetching OpenGraph tags from a given webpage.
 In case if you use `sbt`:
 
 ```sbt
-libraryDependencies += "me.seroperson" %% "opengraph4s" % "0.1.0"
+libraryDependencies += "me.seroperson" %% "opengraph4s" % "0.2.0"
 ```
 
 In case of `mill`:
 
 ```scala
-ivy"me.seroperson::opengraph4s::0.1.0"
+ivy"me.seroperson::opengraph4s::0.2.0"
 ```
 
 ## How to use

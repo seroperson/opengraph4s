@@ -10,6 +10,7 @@ import org.scalatest.freespec.AsyncFreeSpec
 import org.scalatest.matchers.should.Matchers
 import sttp.capabilities.fs2.Fs2Streams
 import sttp.client4.impl.cats.implicits.asyncMonadError
+import sttp.client4.testing.StubBody
 import sttp.client4.testing.WebSocketStreamBackendStub
 import sttp.client4.{Response, StreamBackend}
 import sttp.monad.MonadError
@@ -68,28 +69,17 @@ class SttpClientTest extends AsyncFreeSpec with AsyncIOSpec with Matchers {
         .pure(
           new WebSocketStreamBackendStub[IO, Fs2Streams[IO]](
             MonadError[IO],
-            { case _ /*@ Request(
-                GET,
-                Uri(
-                  scheme,
-                  authority,
-                  pathSegments,
-                  querySegments,
-                  fragmentSegment
-                ),
-                body,
-                headers,
-                response,
-                options,
-                tags
-              )*/ =>
+            { case req =>
               IO.pure(
                 Response.ok(
-                  Right(
-                    Stream[IO, Byte](
-                      twitchTv.getBytes(StandardCharsets.UTF_8): _*
+                  StubBody.Exact(
+                    Right(
+                      Stream[IO, Byte](
+                        twitchTv.getBytes(StandardCharsets.UTF_8): _*
+                      )
                     )
-                  )
+                  ),
+                  req
                 )
               )
             },

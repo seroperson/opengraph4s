@@ -1,18 +1,26 @@
 name: Publish
 
+# Publish only after the Build workflow (compile + test + format) succeeds on
+# master, so a broken build never publishes. Manual dispatch still allowed.
 on:
   workflow_dispatch:
-  push:
+  workflow_run:
+    workflows: ["Build"]
+    types:
+      - completed
     branches:
       - master
 
 jobs:
-  compile-all:
+  publish:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
       - uses: zhutmost/setup-mill@main
       - name: Publish
         env:

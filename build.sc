@@ -11,7 +11,7 @@ object Version {
   val cats = "2.10.0"
   val catsEffect = "3.5.1"
 
-  val sttpClient = "4.0.0-M5"
+  val sttpClient = "4.0.13"
 
   val jsoup = "3.1.0"
 
@@ -69,7 +69,7 @@ object opengraph4s extends Cross[OpenGraph4sModule](Version.scalaCross)
 trait OpenGraph4sModule extends BaseModule with PublishModule {
 
   override def publishVersion: T[String] =
-    "0.1.0"
+    "0.2.0"
 
   override def pomSettings = PomSettings(
     description =
